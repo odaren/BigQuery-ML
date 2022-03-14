@@ -29,7 +29,7 @@ FROM
   `bigquery-public-data.google_analytics_sample.ga_sessions_*`
 GROUP BY date
 ```
-### モデルを評価する
+### モデルを評価
 ML.ARIMA_EVALUATE句で、モデルの評価指標を確認できます。
 ```
 SELECT
@@ -37,7 +37,7 @@ SELECT
 FROM
  ML.ARIMA_EVALUATE(MODEL bqml_test.ga_arima_model)
 ```
-### 未来の訪問ユーザー数を予想する。
+### 未来の訪問ユーザー数を予想
 ```
 SELECT
  *
@@ -45,8 +45,8 @@ FROM
  ML.FORECAST(MODEL bqml_test.ga_arima_model,
              STRUCT(30 AS horizon, 0.8 AS confidence_level))
 ```
-### 予測を可視化する。
-#### 次のクエリは、UNION句を使って、過去データと予測データを結合します。
+### 予測を可視化
+#### 次のクエリは、UNION句を使って、過去データと予測データを結合します
 ```
 SELECT
  history_timestamp AS timestamp,
@@ -75,7 +75,13 @@ FROM
  ML.FORECAST(MODEL bqml_test.ga_arima_model,
              STRUCT(30 AS horizon, 0.8 AS confidence_level))
 ```
-#### 結合結果をデータポータルで可視化します。
-1.クエリが完了したら、「データを探索」ボタンをクリックし、「データポータルで調べる」をクリックします。
+#### 結合結果をデータポータルで可視化する
+1. クエリが完了したら、「データを探索」ボタンをクリックし、「データポータルで調べる」をクリックする。
+2. グラフの種類に、「時系列グラフ」を選択する。
+3. 指標として、「history_value」、「forecast_value」、「prediction_interval_lower_bound」、「prediction_interval_upper_bound」の４つを追加します。
+4. 「スタイル」の「欠落データ」を、「線を途切らせる」を選択する。
+
+### リソースの削除
+余計な課金がされないように、データセット「bqml_test」を削除する。
 
 
