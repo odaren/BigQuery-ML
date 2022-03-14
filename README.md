@@ -9,7 +9,7 @@ BigQueryMLを使用して、Google Analyticsで収集されたセッションデ
 ## 手順
 ### データセットの作成
 MLモデルを保存するデータセット「bqml_test」を「US」リージョンに作成する。
-#### モデルの作成
+### モデルの作成
 CREATE MODEL句で、モデルを作成します。
 モデルには、時系列分析でよく使われるARIMAモデルを使用します。
 ```
@@ -29,7 +29,7 @@ FROM
   `bigquery-public-data.google_analytics_sample.ga_sessions_*`
 GROUP BY date
 ```
-#### モデルを評価する
+### モデルを評価する
 ML.ARIMA_EVALUATE句で、モデルの評価指標を確認できます。
 ```
 SELECT
@@ -37,3 +37,45 @@ SELECT
 FROM
  ML.ARIMA_EVALUATE(MODEL bqml_test.ga_arima_model)
 ```
+### 未来の訪問ユーザー数を予想する。
+```
+SELECT
+ *
+FROM
+ ML.FORECAST(MODEL bqml_test.ga_arima_model,
+             STRUCT(30 AS horizon, 0.8 AS confidence_level))
+```
+### 予測を可視化する。
+#### 次のクエリは、UNION句を使って、過去データと予測データを結合します。
+```
+SELECT
+ history_timestamp AS timestamp,
+ history_value,
+ NULL AS forecast_value,
+ NULL AS prediction_interval_lower_bound,
+ NULL AS prediction_interval_upper_bound
+FROM
+ (
+   SELECT
+     PARSE_TIMESTAMP("%Y%m%d", date) AS history_timestamp,
+     SUM(totals.visits) AS history_value
+   FROM
+     `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+   GROUP BY date
+   ORDER BY date ASC
+ )
+UNION ALL
+SELECT
+ forecast_timestamp AS timestamp,
+ NULL AS history_value,
+ forecast_value,
+ prediction_interval_lower_bound,
+ prediction_interval_upper_bound
+FROM
+ ML.FORECAST(MODEL bqml_test.ga_arima_model,
+             STRUCT(30 AS horizon, 0.8 AS confidence_level))
+```
+#### 結合結果をデータポータルで可視化します。
+1.クエリが完了したら、「データを探索」ボタンをクリックし、「データポータルで調べる」をクリックします。
+
+
