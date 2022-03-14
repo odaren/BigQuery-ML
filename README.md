@@ -1,7 +1,8 @@
 # BigQuery-ML
 
 ## 概要
-Google Analyticsで収集されたセッションデータをもとに、BigQueryMLで、未来の訪問ユーザー数を予想する。
+BigQueryMLで、Google Analyticsで収集されたセッションデータを使用して、未来の訪問ユーザー数を予想し、可視化する。
+
 
 ## 手順
 #### データセットの作成
