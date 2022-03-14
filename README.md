@@ -78,10 +78,12 @@ FROM
 #### 結合結果をデータポータルで可視化する
 1. クエリが完了したら、「データを探索」ボタンをクリックし、「データポータルで調べる」をクリックする。
 2. グラフの種類に、「時系列グラフ」を選択する。
-3. 指標として、「history_value」、「forecast_value」、「prediction_interval_lower_bound」、「prediction_interval_upper_bound」の４つを追加します。
+3. 指標として、「history_value」、「forecast_value」、「prediction_interval_lower_bound」、「prediction_interval_upper_bound」を追加します。
 4. 「スタイル」の「欠落データ」を、「線を途切らせる」を選択する。
 
 ### リソースの削除
 余計な課金がされないように、データセット「bqml_test」を削除する。
+
+
 
 
